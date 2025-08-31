@@ -40,10 +40,10 @@
   </g>
   
   <!-- Task/Process indicators -->
-  <g transform="translate(35, 25)">
-    <circle cx="0" cy="0" r="3" fill="url(#accentGradient)"/>
-    <circle cx="12" cy="0" r="3" fill="url(#cleanGradient)"/>
-    <circle cx="24" cy="0" r="3" fill="#ffffff" opacity="0.8"/>
+  <g transform="translate(64, 25)">
+    <circle cx="-12" cy="0" r="3" fill="url(#accentGradient)"/>
+    <circle cx="0" cy="0" r="3" fill="url(#cleanGradient)"/>
+    <circle cx="12" cy="0" r="3" fill="#ffffff" opacity="0.8"/>
   </g>
   
   <!-- Modern cleaning symbol -->
