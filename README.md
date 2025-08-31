@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.svg" alt="WC Task Cleaner Logo" width="120">
+  <img src="assets/banner.svg" alt="WC Task Cleaner Logo" width="120">
 </p>
 
 # WC Task Cleaner
