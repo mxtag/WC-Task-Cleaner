@@ -12,9 +12,8 @@
       <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
       <stop offset="100%" style="stop-color:#ee5a24;stop-opacity:1" />
     </linearGradient>
-
-    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+    <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
       <feMerge> 
         <feMergeNode in="coloredBlur"/>
         <feMergeNode in="SourceGraphic"/>
@@ -27,41 +26,39 @@
   
   <!-- Main database stack -->
   <g transform="translate(64, 45)">
-    <!-- Database layers -->
-    <g opacity="0.9">
-      <!-- Bottom layer -->
-      <ellipse cx="0" cy="15" rx="28" ry="6" fill="#ffffff" opacity="0.8"/>
-      <rect x="-28" y="9" width="56" height="12" fill="#ffffff" opacity="0.8"/>
-      <ellipse cx="0" cy="9" rx="28" ry="6" fill="#ffffff" opacity="0.9"/>
-      
-      <!-- Middle layer -->
-      <ellipse cx="0" cy="5" rx="28" ry="6" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.6"/>
-      
-      <!-- Top layer -->
-      <ellipse cx="0" cy="-5" rx="28" ry="6" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.6"/>
-    </g>
-  </g>
-  
-  <!-- Modern cleaning symbol -->
-  <g transform="translate(64, 85)">
-    <!-- Cleaning wave/swoosh -->
-    <path d="M -20 0 Q -10 -8 0 0 Q 10 8 20 0" stroke="url(#cleanGradient)" stroke-width="4" fill="none" stroke-linecap="round" filter="url(#glow)"/>
-    <path d="M -15 -5 Q -5 -10 5 -5 Q 15 0 25 -5" stroke="url(#cleanGradient)" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+    <!-- Database cylinder body -->
+    <rect x="-28" y="-5" width="56" height="20" fill="#ffffff" opacity="0.8"/>
+    
+    <!-- Top ellipse -->
+    <ellipse cx="0" cy="-5" rx="28" ry="6" fill="#ffffff" opacity="0.9"/>
+    
+    <!-- Middle layer -->
+    <ellipse cx="0" cy="5" rx="28" ry="6" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.7"/>
+    
+    <!-- Bottom ellipse -->
+    <ellipse cx="0" cy="15" rx="28" ry="6" fill="#ffffff" opacity="0.9"/>
   </g>
   
   <!-- Task/Process indicators -->
   <g transform="translate(35, 25)">
-    <!-- Task dots -->
-    <circle cx="0" cy="0" r="3" fill="url(#accentGradient)" opacity="0.8"/>
-    <circle cx="12" cy="0" r="3" fill="url(#cleanGradient)" opacity="0.8"/>
-    <circle cx="24" cy="0" r="3" fill="#ffffff" opacity="0.6"/>
+    <circle cx="0" cy="0" r="3" fill="url(#accentGradient)"/>
+    <circle cx="12" cy="0" r="3" fill="url(#cleanGradient)"/>
+    <circle cx="24" cy="0" r="3" fill="#ffffff" opacity="0.8"/>
+  </g>
+  
+  <!-- Modern cleaning symbol -->
+  <g transform="translate(64, 85)">
+    <!-- Main cleaning wave with glow -->
+    <path d="M -25 0 Q -15 -12 0 0 Q 15 12 25 0" stroke="url(#cleanGradient)" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+    <!-- Secondary wave -->
+    <path d="M -20 -6 Q -8 -15 8 -6 Q 20 3 30 -6" stroke="url(#cleanGradient)" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.8"/>
   </g>
   
   <!-- Modern sparkle effects -->
-  <g fill="#ffffff" opacity="0.8">
+  <g fill="#ffffff">
     <!-- Large sparkle -->
     <g transform="translate(95, 35)">
-      <path d="M 0 -6 L 1.5 -1.5 L 6 0 L 1.5 1.5 L 0 6 L -1.5 1.5 L -6 0 L -1.5 -1.5 Z" fill="#ffffff"/>
+      <path d="M 0 -6 L 1.5 -1.5 L 6 0 L 1.5 1.5 L 0 6 L -1.5 1.5 L -6 0 L -1.5 -1.5 Z"/>
     </g>
     <!-- Medium sparkle -->
     <g transform="translate(25, 95)">
@@ -69,20 +66,14 @@
     </g>
     <!-- Small sparkle -->
     <g transform="translate(100, 90)">
-      <path d="M 0 -2 L 0.5 -0.5 L 2 0 L 0.5 0.5 L 0 2 L -0.5 0.5 L -2 0 L -0.5 -0.5 Z" fill="#ffffff"/>
+      <path d="M 0 -2 L 0.5 -0.5 L 2 0 L 0.5 0.5 L 0 2 L -0.5 0.5 L -2 0 L -0.5 -0.5 Z"/>
     </g>
   </g>
   
-  <!-- Plugin name (modern approach) -->
-  <g transform="translate(64, 64)" opacity="0.8">
-    <text x="0" y="35" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="7" font-weight="500">WC Task Cleaner</text>
-  </g>
+
   
-  <!-- Performance indicator -->
-  <g transform="translate(90, 65)">
-    <!-- Speed lines -->
-    <line x1="0" y1="0" x2="8" y2="0" stroke="url(#cleanGradient)" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
-    <line x1="0" y1="4" x2="6" y2="4" stroke="url(#cleanGradient)" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
-    <line x1="0" y1="8" x2="4" y2="8" stroke="url(#cleanGradient)" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+  <!-- Plugin name -->
+  <g transform="translate(64, 100)">
+    <text x="0" y="8" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="7" font-weight="700">WC Task Cleaner</text>
   </g>
 </svg>
