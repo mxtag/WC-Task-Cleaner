@@ -1,0 +1,98 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="cleanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ee5a24;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <rect x="0" y="0" width="1280" height="720" fill="url(#bgGradient)"/>
+  
+  <g opacity="0.08">
+    <circle cx="200" cy="150" r="120" fill="#ffffff"/>
+    <circle cx="1080" cy="570" r="150" fill="#ffffff"/>
+    <circle cx="1000" cy="200" r="80" fill="#ffffff"/>
+    <circle cx="150" cy="600" r="100" fill="#ffffff"/>
+  </g>
+  
+  <g transform="translate(400, 360) scale(5)">
+    <g transform="translate(0, -18)">
+      <rect x="-28" y="-5" width="56" height="20" fill="#ffffff" opacity="0.9"/>
+      
+      <ellipse cx="0" cy="-5" rx="28" ry="6" fill="#ffffff"/>
+      
+      <ellipse cx="0" cy="5" rx="28" ry="6" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.8"/>
+      
+      <ellipse cx="0" cy="15" rx="28" ry="6" fill="#ffffff"/>
+    </g>
+    
+    <g transform="translate(0, -43)">
+      <circle cx="-12" cy="0" r="3" fill="url(#accentGradient)"/>
+      <circle cx="0" cy="0" r="3" fill="url(#cleanGradient)"/>
+      <circle cx="12" cy="0" r="3" fill="#ffffff" opacity="0.9"/>
+    </g>
+    
+    <g transform="translate(0, 21)">
+      <path d="M -25 0 Q -15 -12 0 0 Q 15 12 25 0" stroke="url(#cleanGradient)" stroke-width="5" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+      <path d="M -20 -6 Q -8 -15 8 -6 Q 20 3 30 -6" stroke="url(#cleanGradient)" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.9"/>
+    </g>
+  </g>
+  
+  <g transform="translate(900, 280)">
+    <text x="0" y="0" 
+          text-anchor="middle" 
+          fill="#ffffff" 
+          font-family="Arial, sans-serif" 
+          font-size="64" 
+          font-weight="bold">WC Task Cleaner</text>
+    
+    <text x="0" y="120" 
+          text-anchor="middle" 
+          fill="#ffffff" 
+          font-family="Arial, sans-serif" 
+          font-size="30" 
+          font-weight="500">Clean WooCommerce Action Scheduler</text>
+    
+    <text x="0" y="180" 
+          text-anchor="middle" 
+          fill="#ffffff" 
+          font-family="Arial, sans-serif" 
+          font-size="24" 
+          font-weight="400">Optimize Database Performance</text>
+  </g>
+  
+
+  
+  <g fill="#ffffff" opacity="0.7">
+    <g transform="translate(650, 150)">
+      <path d="M 0 -12 L 3 -3 L 12 0 L 3 3 L 0 12 L -3 3 L -12 0 L -3 -3 Z"/>
+    </g>
+    
+    <g transform="translate(150, 500)">
+      <path d="M 0 -8 L 2 -2 L 8 0 L 2 2 L 0 8 L -2 2 L -8 0 L -2 -2 Z" fill="url(#cleanGradient)"/>
+    </g>
+    
+    <g transform="translate(1150, 200)">
+      <path d="M 0 -6 L 1.5 -1.5 L 6 0 L 1.5 1.5 L 0 6 L -1.5 1.5 L -6 0 L -1.5 -1.5 Z"/>
+    </g>
+    
+    <g transform="translate(1200, 550)">
+      <path d="M 0 -9 L 2.2 -2.2 L 9 0 L 2.2 2.2 L 0 9 L -2.2 2.2 L -9 0 L -2.2 -2.2 Z"/>
+    </g>
+  </g>
+</svg>
