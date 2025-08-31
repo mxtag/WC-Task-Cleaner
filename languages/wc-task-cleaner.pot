@@ -1,0 +1,122 @@
+# Copyright (C) 2024 WC Task Cleaner
+# This file is distributed under the same license as the WC Task Cleaner package.
+msgid ""
+msgstr ""
+"Project-Id-Version: WC Task Cleaner 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/mxtag/WC-Task-Cleaner/issues\n"
+"POT-Creation-Date: 2024-08-31 15:00+0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Domain: wc-task-cleaner\n"
+
+#. Plugin action link
+msgid "Settings"
+msgstr ""
+
+#. Menu/page title
+msgid "WC Task Cleaner"
+msgstr ""
+
+#. Capability error
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#. Notices/messages after actions
+msgid "All completed and failed tasks have been cleaned."
+msgstr ""
+
+msgid "Selected tasks have been cleaned."
+msgstr ""
+
+msgid "All failed tasks have been cleaned."
+msgstr ""
+
+msgid "All logs have been cleared."
+msgstr ""
+
+#. Section titles / labels
+msgid "Task Statistics"
+msgstr ""
+
+msgid "Pending tasks:"
+msgstr ""
+
+msgid "Completed Tasks"
+msgstr ""
+
+msgid "Failed Tasks"
+msgstr ""
+
+msgid "Operation Logs"
+msgstr ""
+
+#. Table headers
+msgid "Hook Name"
+msgstr ""
+
+msgid "Count"
+msgstr ""
+
+msgid "Next Scheduled Run (GMT)"
+msgstr ""
+
+msgid "Operation"
+msgstr ""
+
+msgid "Details"
+msgstr ""
+
+msgid "Time"
+msgstr ""
+
+#. Buttons / actions
+msgid "Clean All Completed + Failed Tasks"
+msgstr ""
+
+msgid "Clean Selected"
+msgstr ""
+
+msgid "Clean All Failed Tasks"
+msgstr ""
+
+msgid "Clear All Logs"
+msgstr ""
+
+#. Empty state
+msgid "No operation logs yet."
+msgstr ""
+
+#. Confirm dialogs
+msgid "Confirm to clean [Completed + Failed] tasks and their Action Scheduler logs?"
+msgstr ""
+
+msgid "Will directly rebuild the log table (DROP+CREATE) and cannot be recovered. Confirm to continue?"
+msgstr ""
+
+#. Log operation labels / messages
+msgid "Clean All"
+msgstr ""
+
+#. translators: %d: number of tasks cleaned
+msgid "Cleaned %d completed and failed tasks"
+msgstr ""
+
+msgid "Clean Selected"
+msgstr ""
+
+#. translators: 1: number of tasks cleaned, 2: comma-separated list of hooks
+msgid "Cleaned %1$d tasks from selected hooks: %2$s"
+msgstr ""
+
+msgid "Clean Failed"
+msgstr ""
+
+#. translators: %d: number of failed tasks cleaned
+msgid "Cleaned %d failed tasks"
+msgstr ""
