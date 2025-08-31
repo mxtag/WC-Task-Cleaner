@@ -73,7 +73,7 @@
 
   
   <!-- Plugin name -->
-  <g transform="translate(64, 100)">
-    <text x="0" y="8" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="7" font-weight="700">WC Task Cleaner</text>
+  <g transform="translate(64, 105)">
+    <text x="0" y="8" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="10" font-weight="700">WC Task Cleaner</text>
   </g>
 </svg>
