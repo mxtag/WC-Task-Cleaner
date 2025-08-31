@@ -1,0 +1,90 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="cleanGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ee5a24;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.15"/>
+    </filter>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background rounded square -->
+  <rect x="8" y="8" width="112" height="112" rx="24" ry="24" fill="url(#bgGradient)" filter="url(#shadow)"/>
+  
+  <!-- Main database stack -->
+  <g transform="translate(64, 45)">
+    <!-- Database layers -->
+    <g opacity="0.9">
+      <!-- Bottom layer -->
+      <ellipse cx="0" cy="15" rx="28" ry="6" fill="#ffffff" opacity="0.8"/>
+      <rect x="-28" y="9" width="56" height="12" fill="#ffffff" opacity="0.8"/>
+      <ellipse cx="0" cy="9" rx="28" ry="6" fill="#ffffff" opacity="0.9"/>
+      
+      <!-- Middle layer -->
+      <ellipse cx="0" cy="5" rx="28" ry="6" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.6"/>
+      
+      <!-- Top layer -->
+      <ellipse cx="0" cy="-5" rx="28" ry="6" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.6"/>
+    </g>
+  </g>
+  
+  <!-- Modern cleaning symbol -->
+  <g transform="translate(64, 85)">
+    <!-- Cleaning wave/swoosh -->
+    <path d="M -20 0 Q -10 -8 0 0 Q 10 8 20 0" stroke="url(#cleanGradient)" stroke-width="4" fill="none" stroke-linecap="round" filter="url(#glow)"/>
+    <path d="M -15 -5 Q -5 -10 5 -5 Q 15 0 25 -5" stroke="url(#cleanGradient)" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
+  </g>
+  
+  <!-- Task/Process indicators -->
+  <g transform="translate(35, 25)">
+    <!-- Task dots -->
+    <circle cx="0" cy="0" r="3" fill="url(#accentGradient)" opacity="0.8"/>
+    <circle cx="12" cy="0" r="3" fill="url(#cleanGradient)" opacity="0.8"/>
+    <circle cx="24" cy="0" r="3" fill="#ffffff" opacity="0.6"/>
+  </g>
+  
+  <!-- Modern sparkle effects -->
+  <g fill="#ffffff" opacity="0.8">
+    <!-- Large sparkle -->
+    <g transform="translate(95, 35)">
+      <path d="M 0 -6 L 1.5 -1.5 L 6 0 L 1.5 1.5 L 0 6 L -1.5 1.5 L -6 0 L -1.5 -1.5 Z" fill="#ffffff"/>
+    </g>
+    <!-- Medium sparkle -->
+    <g transform="translate(25, 95)">
+      <path d="M 0 -4 L 1 -1 L 4 0 L 1 1 L 0 4 L -1 1 L -4 0 L -1 -1 Z" fill="url(#cleanGradient)"/>
+    </g>
+    <!-- Small sparkle -->
+    <g transform="translate(100, 90)">
+      <path d="M 0 -2 L 0.5 -0.5 L 2 0 L 0.5 0.5 L 0 2 L -0.5 0.5 L -2 0 L -0.5 -0.5 Z" fill="#ffffff"/>
+    </g>
+  </g>
+  
+  <!-- Plugin name (modern approach) -->
+  <g transform="translate(64, 64)" opacity="0.8">
+    <text x="0" y="35" text-anchor="middle" fill="#ffffff" font-family="Arial, sans-serif" font-size="7" font-weight="500">WC Task Cleaner</text>
+  </g>
+  
+  <!-- Performance indicator -->
+  <g transform="translate(90, 65)">
+    <!-- Speed lines -->
+    <line x1="0" y1="0" x2="8" y2="0" stroke="url(#cleanGradient)" stroke-width="2" stroke-linecap="round" opacity="0.6"/>
+    <line x1="0" y1="4" x2="6" y2="4" stroke="url(#cleanGradient)" stroke-width="2" stroke-linecap="round" opacity="0.4"/>
+    <line x1="0" y1="8" x2="4" y2="8" stroke="url(#cleanGradient)" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+  </g>
+</svg>
