@@ -1,8 +1,8 @@
 <p align="center">
-  <img src="assets/banner.svg" alt="Store Task Scheduler Cleaner logo" width="1280">
+  <img src="assets/banner.svg" alt="WC Task Cleaner logo" width="1280">
 </p>
 
-# Store Task Scheduler Cleaner
+# WC Task Cleaner
 
 [English](#english) | [中文](#中文)
 
@@ -10,7 +10,7 @@
 
 ## English
 
-**Store Task Scheduler Cleaner** is a lightweight WordPress plugin designed to **clean and manage WooCommerce Action Scheduler tasks**.  
+**WC Task Cleaner** is a lightweight WordPress plugin designed to **clean and manage WooCommerce Action Scheduler tasks**.  
 It helps keep your database tidy and improves site performance.
 
 ### ✨ Features
@@ -35,7 +35,7 @@ This plugin supports multiple languages:
 
 ## 中文
 
-**Store Task Scheduler Cleaner** 是一个轻量级的 WordPress 插件，用于 **清理和管理 WooCommerce Action Scheduler 任务**，保持数据库干净，提升网站性能。  
+**WC Task Cleaner** 是一个轻量级的 WordPress 插件，用于 **清理和管理 WooCommerce Action Scheduler 任务**，保持数据库干净，提升网站性能。  
 
 ### ✨ 功能特性
 - 📊 显示未来 (pending) 任务数量统计  
@@ -53,4 +53,4 @@ This plugin supports multiple languages:
 ### 🚀 安装使用
 1. 将插件文件上传到 `/wp-content/plugins/` 目录  
 2. 在后台插件菜单中启用插件  
-3. 打开 **工具 → Store Task Scheduler Cleaner** 即可开始清理  
+3. 打开 **工具 → WC Task Cleaner** 即可开始清理  
