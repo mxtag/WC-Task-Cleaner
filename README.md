@@ -29,7 +29,7 @@ This plugin supports multiple languages:
 ### 🚀 Installation
 1. Upload the plugin files to the `/wp-content/plugins/` directory  
 2. Activate the plugin through the WordPress “Plugins” menu  
-3. Go to **Tools → Store Task Scheduler Cleaner** to start cleaning  
+3. Go to **Tools → WC Task Cleaner** to start cleaning  
 
 ---
 
