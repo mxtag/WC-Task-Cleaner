@@ -1,4 +1,4 @@
-=== Store Task Scheduler Cleaner ===
+=== WC Task Cleaner ===
 Contributors: mxtag
 Tags: woocommerce, action scheduler, cleanup, performance, database
 Requires at least: 6.0
@@ -7,13 +7,12 @@ Requires PHP: 7.2
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Requires Plugins: woocommerce
 
 Clean WooCommerce Action Scheduler tasks (complete/failed) to optimize database size and speed up your store.
 
 == Description ==
 
-**Store Task Scheduler Cleaner** helps you keep WooCommerce's Action Scheduler tables lean by removing completed and failed tasks (and their scheduler logs). This reduces database bloat and can improve query performance.
+**WC Task Cleaner** helps you keep WooCommerce's Action Scheduler tables lean by removing completed and failed tasks (and their scheduler logs). This reduces database bloat and can improve query performance.
 
 **Key features**
 - ✓ One-click cleanup for **Completed + Failed** tasks
@@ -22,13 +21,13 @@ Clean WooCommerce Action Scheduler tasks (complete/failed) to optimize database 
 - ✓ Built-in, minimal **operation log** (plugin-owned table)
 - ✓ Admin-only, secure & i18n-ready; no front-end impact
 
-> This plugin requires WooCommerce. WordPress 6.5+ will enforce the dependency automatically via the `Requires Plugins` header.
+> This plugin works with WooCommerce when available, but does not require it to be installed.
 
 == Installation ==
 
-1. Install and activate **WooCommerce**.
-2. Upload and activate **Store Task Scheduler Cleaner**.
-3. Go to **Tools → Store Task Scheduler Cleaner** to run cleanups.
+1. Upload and activate **WC Task Cleaner**.
+2. If using WooCommerce, the plugin will show Action Scheduler cleanup options.
+3. Go to **Tools → WC Task Cleaner** to run cleanups.
 
 == Frequently Asked Questions ==
 
