@@ -1,23 +1,36 @@
 <?php
 /**
- * Plugin Name: Store Task Scheduler Cleaner
- * Plugin URI:  https://github.com/mxtag/store-task-scheduler-cleaner
+ * Plugin Name: WC Task Cleaner
+ * Plugin URI:  https://github.com/mxtag/wc-task-cleaner
  * Description: Clean WooCommerce Action Scheduler tasks (complete/failed) to optimize database performance and speed up your store.
  * Version:     1.0.0
  * Author:      mxtag
  * Author URI:  https://www.mxtag.com
  * License:     GPLv2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain: store-task-scheduler-cleaner
+ * Text Domain: wc-task-cleaner
  * Domain Path: /languages
- * Requires Plugins: woocommerce
+ * Network:     false
+ *
+ * WC Task Cleaner is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * any later version.
+ *
+ * WC Task Cleaner is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with WC Task Cleaner. If not, see https://www.gnu.org/licenses/gpl-2.0.html.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class STSCleaner_Plugin {
+class WCTaskCleaner_Plugin {
 	/** @var string WooCommerce Action Scheduler actions table. */
 	private $as_actions;
 
@@ -34,16 +47,22 @@ class STSCleaner_Plugin {
 		$this->as_actions = $wpdb->prefix . 'actionscheduler_actions';
 		$this->as_logs    = $wpdb->prefix . 'actionscheduler_logs';
 
-		// Plugin-owned table: use a distinctive prefix to avoid conflicts.
-		$this->log_table  = $wpdb->prefix . 'store_tsc_logs';
+		// Plugin-owned table: use wc_task_cleaner_logs as suffix.
+		$this->log_table  = $wpdb->prefix . 'wc_task_cleaner_logs';
 
 		add_action( 'admin_init', array( $this, 'handle_actions' ) );
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
 		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'add_settings_link' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
+		add_action( 'plugins_loaded', array( $this, 'load_textdomain' ) );
 
-		// Optional soft check for WooCommerce on older cores (<6.5) where "Requires Plugins" header is ignored.
-		add_action( 'admin_notices', array( $this, 'maybe_notice_missing_wc' ) );
+
+	}
+
+	/**
+	 * Load plugin textdomain for internationalization.
+	 */
+	public function load_textdomain() {
+		load_plugin_textdomain( 'wc-task-cleaner', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 	}
 
 	/**
@@ -51,7 +70,7 @@ class STSCleaner_Plugin {
 	 */
 	public static function activate() {
 		global $wpdb;
-		$table_name = $wpdb->prefix . 'store_tsc_logs';
+		$table_name = $wpdb->prefix . 'wc_task_cleaner_logs';
 
 		$charset_collate = $wpdb->get_charset_collate();
 		$sql             = "CREATE TABLE {$table_name} (
@@ -65,74 +84,99 @@ class STSCleaner_Plugin {
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $sql );
 
-		update_option( 'stscleaner_version', '1.0.0' );
+		update_option( 'wc_task_cleaner_version', '1.0.0' );
 	}
 
 	/**
-	 * Show admin notice if WooCommerce is inactive (best-effort for older cores).
+	 * Check if Action Scheduler tables exist.
+	 *
+	 * @return bool True if Action Scheduler tables exist.
 	 */
-	public function maybe_notice_missing_wc() {
-		if ( ! current_user_can( 'activate_plugins' ) ) {
-			return;
-		}
-		if ( class_exists( 'WooCommerce' ) ) {
-			return;
-		}
-		// Translators: admin notice when WooCommerce is missing.
-		$message = esc_html__( 'Store Task Scheduler Cleaner requires WooCommerce to be active.', 'store-task-scheduler-cleaner' );
-		echo '<div class="notice notice-warning"><p>' . $message . '</p></div>';
+	private function action_scheduler_exists() {
+		return $this->table_exists( $this->as_actions ) && $this->table_exists( $this->as_logs );
 	}
 
 	/**
-	 * Enqueue admin assets only on our tools page. No inline <script>.
+	 * Enqueue admin assets inline.
 	 */
 	public function enqueue_assets( $hook ) {
-		if ( 'tools_page_store-task-scheduler-cleaner' !== $hook ) {
+		if ( 'tools_page_wc-task-cleaner' !== $hook ) {
 			return;
 		}
 
-		$ver = '1.0.0';
-
-		wp_register_script(
-			'stscleaner-admin-js',
-			plugins_url( 'assets/admin.js', __FILE__ ),
-			array( 'jquery' ),
-			$ver,
-			true
-		);
-
-		wp_localize_script(
-			'stscleaner-admin-js',
-			'STSCleanerI18n',
-			array(
-				'confirmCleanAll'        => __( 'Confirm to clean Completed + Failed tasks and their Action Scheduler logs?', 'store-task-scheduler-cleaner' ),
-				'confirmClearLogs'       => __( 'This will DROP and recreate the plugin log table. This action cannot be undone. Continue?', 'store-task-scheduler-cleaner' ),
-				'pleaseSelectAtLeastOne' => __( 'Please select at least one hook to clean.', 'store-task-scheduler-cleaner' ),
-			)
-		);
-
-		wp_enqueue_script( 'stscleaner-admin-js' );
+		// Inline JavaScript to avoid external file dependencies
+		?>
+		<script type="text/javascript">
+		(function() {
+			'use strict';
+			
+			if (typeof jQuery === 'undefined') {
+				return;
+			}
+			
+			jQuery(function($) {
+				// Localized strings
+				var i18n = {
+					confirmCleanAll: <?php echo wp_json_encode( __( 'Confirm to clean Completed + Failed tasks and their Action Scheduler logs?', 'wc-task-cleaner' ) ); ?>,
+					confirmClearLogs: <?php echo wp_json_encode( __( 'This will DROP and recreate the plugin log table. This action cannot be undone. Continue?', 'wc-task-cleaner' ) ); ?>,
+					pleaseSelectAtLeastOne: <?php echo wp_json_encode( __( 'Please select at least one hook to clean.', 'wc-task-cleaner' ) ); ?>
+				};
+				
+				// Select all checkboxes
+				var $selectAll = $('#wctc-select-all');
+				if ($selectAll.length) {
+					$selectAll.on('change', function() {
+						var checked = $(this).is(':checked');
+						$('input[name="selected_hooks[]"]').prop('checked', checked);
+					});
+				}
+				
+				// Confirm: Clean All
+				$('#wctc-clean-all').on('click', function(e) {
+					if (!window.confirm(i18n.confirmCleanAll)) {
+						e.preventDefault();
+					}
+				});
+				
+				// Confirm: Clear Logs
+				$('#wctc-clear-logs').on('click', function(e) {
+					if (!window.confirm(i18n.confirmClearLogs)) {
+						e.preventDefault();
+					}
+				});
+				
+				// Validate "Clean Selected" form
+				$('#wctc-clean-selected-form').on('submit', function(e) {
+					if ($('input[name="selected_hooks[]"]:checked').length === 0) {
+						e.preventDefault();
+						window.alert(i18n.pleaseSelectAtLeastOne);
+					}
+				});
+			});
+		})();
+		</script>
+		<?php
 	}
 
 	/**
 	 * Add "Settings" quick link.
 	 */
 	public function add_settings_link( $links ) {
-		$url           = admin_url( 'tools.php?page=store-task-scheduler-cleaner' );
-		$settings_link = '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Settings', 'store-task-scheduler-cleaner' ) . '</a>';
+		$url           = admin_url( 'tools.php?page=wc-task-cleaner' );
+		$settings_link = '<a href="' . esc_url( $url ) . '">' . esc_html__( 'Settings', 'wc-task-cleaner' ) . '</a>';
 		array_unshift( $links, $settings_link );
 		return $links;
 	}
 
 	/**
-	 * Add Tools > Store Task Scheduler Cleaner page.
+	 * Add Tools > WC Task Cleaner page.
 	 */
 	public function add_admin_menu() {
 		add_management_page(
-			__( 'Store Task Scheduler Cleaner', 'store-task-scheduler-cleaner' ),
-			__( 'Store Task Scheduler Cleaner', 'store-task-scheduler-cleaner' ),
+			__( 'WC Task Cleaner', 'wc-task-cleaner' ),
+			__( 'WC Task Cleaner', 'wc-task-cleaner' ),
 			'manage_options',
-			'store-task-scheduler-cleaner',
+			'wc-task-cleaner',
 			array( $this, 'admin_page' )
 		);
 	}
@@ -151,6 +195,10 @@ class STSCleaner_Plugin {
 	 * Get pending tasks count.
 	 */
 	private function get_pending_count() {
+		if ( ! $this->action_scheduler_exists() ) {
+			return 0;
+		}
+		
 		global $wpdb;
 		$table = esc_sql( $this->as_actions );
 		// Admin-only, no user input; identifier escaped.
@@ -162,6 +210,10 @@ class STSCleaner_Plugin {
 	 * Get completed tasks grouped by hook, plus next pending run time.
 	 */
 	private function get_completed_tasks() {
+		if ( ! $this->action_scheduler_exists() ) {
+			return array();
+		}
+		
 		global $wpdb;
 		$table = esc_sql( $this->as_actions );
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -182,6 +234,10 @@ class STSCleaner_Plugin {
 	 * Get failed tasks grouped by hook.
 	 */
 	private function get_failed_tasks() {
+		if ( ! $this->action_scheduler_exists() ) {
+			return array();
+		}
+		
 		global $wpdb;
 		$table = esc_sql( $this->as_actions );
 		// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -197,9 +253,9 @@ class STSCleaner_Plugin {
 			return;
 		}
 		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'store-task-scheduler-cleaner' ) );
+			wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'wc-task-cleaner' ) );
 		}
-		check_admin_referer( 'stscleaner_action' );
+		check_admin_referer( 'wctc_action' );
 
 		$action  = sanitize_text_field( wp_unslash( $_POST['do'] ) );
 		$message = '';
@@ -207,25 +263,25 @@ class STSCleaner_Plugin {
 		switch ( $action ) {
 			case 'clean_all':
 				$this->clean_completed_failed();
-				$message = __( 'All completed and failed tasks have been cleaned.', 'store-task-scheduler-cleaner' );
+				$message = __( 'All completed and failed tasks have been cleaned.', 'wc-task-cleaner' );
 				break;
 
 			case 'clean_selected':
 				if ( isset( $_POST['selected_hooks'] ) && is_array( $_POST['selected_hooks'] ) ) {
 					$selected_hooks = array_map( 'sanitize_text_field', (array) wp_unslash( $_POST['selected_hooks'] ) );
 					$this->clean_selected_hooks( $selected_hooks );
-					$message = __( 'Selected tasks have been cleaned.', 'store-task-scheduler-cleaner' );
+					$message = __( 'Selected tasks have been cleaned.', 'wc-task-cleaner' );
 				}
 				break;
 
 			case 'clean_failed':
 				$this->clean_failed_tasks();
-				$message = __( 'All failed tasks have been cleaned.', 'store-task-scheduler-cleaner' );
+				$message = __( 'All failed tasks have been cleaned.', 'wc-task-cleaner' );
 				break;
 
 			case 'clear_logs':
 				$this->clear_logs();
-				$message = __( 'All logs have been cleared.', 'store-task-scheduler-cleaner' );
+				$message = __( 'All logs have been cleared.', 'wc-task-cleaner' );
 				break;
 		}
 
@@ -252,10 +308,10 @@ class STSCleaner_Plugin {
 		$wpdb->query( "DELETE FROM `{$actions}` WHERE status IN ('complete','failed')" );
 
 		$this->log_operation(
-			__( 'Clean All', 'store-task-scheduler-cleaner' ),
+			__( 'Clean All', 'wc-task-cleaner' ),
 			sprintf(
 				/* translators: %d: number of tasks cleaned */
-				__( 'Cleaned %d completed and failed tasks', 'store-task-scheduler-cleaner' ),
+				__( 'Cleaned %d completed and failed tasks', 'wc-task-cleaner' ),
 				$completed_count
 			)
 		);
@@ -311,10 +367,10 @@ class STSCleaner_Plugin {
 		);
 
 		$this->log_operation(
-			__( 'Clean Selected', 'store-task-scheduler-cleaner' ),
+			__( 'Clean Selected', 'wc-task-cleaner' ),
 			sprintf(
 				/* translators: 1: number of tasks cleaned, 2: comma-separated list of hooks */
-				__( 'Cleaned %1$d tasks from selected hooks: %2$s', 'store-task-scheduler-cleaner' ),
+				__( 'Cleaned %1$d tasks from selected hooks: %2$s', 'wc-task-cleaner' ),
 				$count,
 				implode( ', ', $hooks )
 			)
@@ -339,10 +395,10 @@ class STSCleaner_Plugin {
 		$wpdb->query( "DELETE FROM `{$actions}` WHERE status = 'failed'" );
 
 		$this->log_operation(
-			__( 'Clean Failed', 'store-task-scheduler-cleaner' ),
+			__( 'Clean Failed', 'wc-task-cleaner' ),
 			sprintf(
 				/* translators: %d: number of failed tasks cleaned */
-				__( 'Cleaned %d failed tasks', 'store-task-scheduler-cleaner' ),
+				__( 'Cleaned %d failed tasks', 'wc-task-cleaner' ),
 				$failed_count
 			)
 		);
@@ -402,7 +458,7 @@ class STSCleaner_Plugin {
 	 */
 	public function admin_page() {
 		// Display success message (nonce-verified).
-		if ( isset( $_GET['msg'], $_GET['_stsc'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_stsc'] ) ), 'stsc_msg' ) ) {
+		if ( isset( $_GET['msg'], $_GET['_wctc'] ) && wp_verify_nonce( sanitize_text_field( wp_unslash( $_GET['_wctc'] ) ), 'wctc_msg' ) ) {
 			$msg = sanitize_text_field( wp_unslash( $_GET['msg'] ) );
 			echo '<div class="notice notice-success is-dismissible"><p>' . esc_html( $msg ) . '</p></div>';
 		}
@@ -411,43 +467,50 @@ class STSCleaner_Plugin {
 		$completed_tasks = $this->get_completed_tasks();
 		$failed_tasks    = $this->get_failed_tasks();
 		$logs            = $this->get_logs();
+		$has_action_scheduler = $this->action_scheduler_exists();
 		?>
 		<div class="wrap">
-			<h1><?php echo esc_html__( 'Store Task Scheduler Cleaner', 'store-task-scheduler-cleaner' ); ?></h1>
+			<h1><?php echo esc_html__( 'WC Task Cleaner', 'wc-task-cleaner' ); ?></h1>
+
+			<?php if ( ! $has_action_scheduler ) : ?>
+				<div class="notice notice-info">
+					<p><?php esc_html_e( 'Action Scheduler tables not found. This plugin works with WooCommerce Action Scheduler. If WooCommerce is installed, the tables will be created automatically.', 'wc-task-cleaner' ); ?></p>
+				</div>
+			<?php else : ?>
 
 			<div class="card" style="max-width:none;width:100%;">
-				<h2><?php echo esc_html__( 'Task Statistics', 'store-task-scheduler-cleaner' ); ?></h2>
+				<h2><?php echo esc_html__( 'Task Statistics', 'wc-task-cleaner' ); ?></h2>
 				<p>
-					<?php echo esc_html__( 'Pending tasks:', 'store-task-scheduler-cleaner' ); ?>
+					<?php echo esc_html__( 'Pending tasks:', 'wc-task-cleaner' ); ?>
 					<strong><?php echo esc_html( number_format_i18n( $pending_count ) ); ?></strong>
 				</p>
 
-				<form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=store-task-scheduler-cleaner' ) ); ?>">
-					<?php wp_nonce_field( 'stscleaner_action' ); ?>
+				<form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=wc-task-cleaner' ) ); ?>">
+					<?php wp_nonce_field( 'wctc_action' ); ?>
 					<input type="hidden" name="do" value="clean_all">
-					<button type="submit" id="stsc-clean-all" class="button button-primary">
-						<?php echo esc_html__( 'Clean All Completed + Failed Tasks', 'store-task-scheduler-cleaner' ); ?>
+					<button type="submit" id="wctc-clean-all" class="button button-primary">
+						<?php echo esc_html__( 'Clean All Completed + Failed Tasks', 'wc-task-cleaner' ); ?>
 					</button>
 				</form>
 			</div>
 
 			<?php if ( ! empty( $completed_tasks ) ) : ?>
 			<div class="card" style="max-width:none;width:100%;">
-				<h2><?php echo esc_html__( 'Completed Tasks', 'store-task-scheduler-cleaner' ); ?></h2>
+				<h2><?php echo esc_html__( 'Completed Tasks', 'wc-task-cleaner' ); ?></h2>
 
-				<form id="stsc-clean-selected-form" method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=store-task-scheduler-cleaner' ) ); ?>">
-					<?php wp_nonce_field( 'stscleaner_action' ); ?>
+				<form id="wctc-clean-selected-form" method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=wc-task-cleaner' ) ); ?>">
+					<?php wp_nonce_field( 'wctc_action' ); ?>
 					<input type="hidden" name="do" value="clean_selected">
 
 					<table class="wp-list-table widefat fixed striped">
 						<thead>
 							<tr>
 								<td class="manage-column column-cb check-column">
-									<input type="checkbox" id="select-all">
+									<input type="checkbox" id="wctc-select-all">
 								</td>
-								<th><?php echo esc_html__( 'Hook Name', 'store-task-scheduler-cleaner' ); ?></th>
-								<th><?php echo esc_html__( 'Count', 'store-task-scheduler-cleaner' ); ?></th>
-								<th><?php echo esc_html__( 'Next Scheduled Run (GMT)', 'store-task-scheduler-cleaner' ); ?></th>
+								<th><?php echo esc_html__( 'Hook Name', 'wc-task-cleaner' ); ?></th>
+								<th><?php echo esc_html__( 'Count', 'wc-task-cleaner' ); ?></th>
+								<th><?php echo esc_html__( 'Next Scheduled Run (GMT)', 'wc-task-cleaner' ); ?></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -465,7 +528,7 @@ class STSCleaner_Plugin {
 					</table>
 
 					<p class="submit">
-						<button type="submit" class="button"><?php echo esc_html__( 'Clean Selected', 'store-task-scheduler-cleaner' ); ?></button>
+						<button type="submit" class="button"><?php echo esc_html__( 'Clean Selected', 'wc-task-cleaner' ); ?></button>
 					</p>
 				</form>
 			</div>
@@ -473,19 +536,19 @@ class STSCleaner_Plugin {
 
 			<?php if ( ! empty( $failed_tasks ) ) : ?>
 			<div class="card" style="max-width:none;width:100%;">
-				<h2><?php echo esc_html__( 'Failed Tasks', 'store-task-scheduler-cleaner' ); ?></h2>
+				<h2><?php echo esc_html__( 'Failed Tasks', 'wc-task-cleaner' ); ?></h2>
 
-				<form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=store-task-scheduler-cleaner' ) ); ?>">
-					<?php wp_nonce_field( 'stscleaner_action' ); ?>
+				<form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=wc-task-cleaner' ) ); ?>">
+					<?php wp_nonce_field( 'wctc_action' ); ?>
 					<input type="hidden" name="do" value="clean_failed">
-					<button type="submit" class="button"><?php echo esc_html__( 'Clean All Failed Tasks', 'store-task-scheduler-cleaner' ); ?></button>
+					<button type="submit" class="button"><?php echo esc_html__( 'Clean All Failed Tasks', 'wc-task-cleaner' ); ?></button>
 				</form>
 
 				<table class="wp-list-table widefat fixed striped">
 					<thead>
 						<tr>
-							<th><?php echo esc_html__( 'Hook Name', 'store-task-scheduler-cleaner' ); ?></th>
-							<th><?php echo esc_html__( 'Count', 'store-task-scheduler-cleaner' ); ?></th>
+							<th><?php echo esc_html__( 'Hook Name', 'wc-task-cleaner' ); ?></th>
+							<th><?php echo esc_html__( 'Count', 'wc-task-cleaner' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -499,15 +562,16 @@ class STSCleaner_Plugin {
 				</table>
 			</div>
 			<?php endif; ?>
+			<?php endif; ?>
 
 			<div class="card" style="max-width:none;width:100%;">
-				<h2><?php echo esc_html__( 'Operation Logs', 'store-task-scheduler-cleaner' ); ?></h2>
+				<h2><?php echo esc_html__( 'Operation Logs', 'wc-task-cleaner' ); ?></h2>
 
-				<form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=store-task-scheduler-cleaner' ) ); ?>">
-					<?php wp_nonce_field( 'stscleaner_action' ); ?>
+				<form method="post" action="<?php echo esc_url( admin_url( 'tools.php?page=wc-task-cleaner' ) ); ?>">
+					<?php wp_nonce_field( 'wctc_action' ); ?>
 					<input type="hidden" name="do" value="clear_logs">
-					<button type="submit" id="stsc-clear-logs" class="button">
-						<?php echo esc_html__( 'Clear All Logs', 'store-task-scheduler-cleaner' ); ?>
+					<button type="submit" id="wctc-clear-logs" class="button">
+						<?php echo esc_html__( 'Clear All Logs', 'wc-task-cleaner' ); ?>
 					</button>
 				</form>
 
@@ -515,9 +579,9 @@ class STSCleaner_Plugin {
 				<table class="wp-list-table widefat fixed striped">
 					<thead>
 						<tr>
-							<th><?php echo esc_html__( 'Operation', 'store-task-scheduler-cleaner' ); ?></th>
-							<th><?php echo esc_html__( 'Details', 'store-task-scheduler-cleaner' ); ?></th>
-							<th><?php echo esc_html__( 'Time', 'store-task-scheduler-cleaner' ); ?></th>
+							<th><?php echo esc_html__( 'Operation', 'wc-task-cleaner' ); ?></th>
+							<th><?php echo esc_html__( 'Details', 'wc-task-cleaner' ); ?></th>
+							<th><?php echo esc_html__( 'Time', 'wc-task-cleaner' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -531,11 +595,13 @@ class STSCleaner_Plugin {
 					</tbody>
 				</table>
 				<?php else : ?>
-				<p><?php esc_html_e( 'No operation logs yet.', 'store-task-scheduler-cleaner' ); ?></p>
+				<p><?php esc_html_e( 'No operation logs yet.', 'wc-task-cleaner' ); ?></p>
 				<?php endif; ?>
 			</div>
 		</div>
 		<?php
+		// Call inline JavaScript for this page
+		$this->enqueue_assets( $GLOBALS['hook_suffix'] ?? '' );
 	}
 
 	/**
@@ -544,9 +610,9 @@ class STSCleaner_Plugin {
 	private function redirect_with_message( $message ) {
 		$redirect_url = add_query_arg(
 			array(
-				'page'  => 'store-task-scheduler-cleaner',
+				'page'  => 'wc-task-cleaner',
 				'msg'   => rawurlencode( $message ),
-				'_stsc' => wp_create_nonce( 'stsc_msg' ),
+				'_wctc' => wp_create_nonce( 'wctc_msg' ),
 			),
 			admin_url( 'tools.php' )
 		);
@@ -557,5 +623,5 @@ class STSCleaner_Plugin {
 }
 
 // Bootstrap.
-register_activation_hook( __FILE__, array( 'STSCleaner_Plugin', 'activate' ) );
-new STSCleaner_Plugin();
+register_activation_hook( __FILE__, array( 'WCTaskCleaner_Plugin', 'activate' ) );
+new WCTaskCleaner_Plugin();
